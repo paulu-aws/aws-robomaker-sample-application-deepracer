@@ -186,8 +186,19 @@ class DeepRacerEnv(gym.Env):
         self.ack_publisher.publish(ack_msg)
 
     def reward_function(self, on_track, x, y, distance_from_center, car_orientation, progress, steps,
-                        throttle, steering, track_width, waypoints, closest_waypoints):
+                        throttle, steering_angle, track_width, waypoints, closest_waypoints):
+        
+        print('x=%.2f' % x,
+              'y=%.2f' % y,
+              'throttle=%.2f' % throttle,
+              'steering_angle=%.2f' % steering_angle,
+              'distance_from_center=%.2f' % distance_from_center,
+              'progress=%.2f' % progress,
+              'track_width=%.2f' % track_width)
+            
         if distance_from_center >= 0.0 and distance_from_center <= 0.02:
+            if steering_angle == 0.0:
+                return 1.5
             return 1.0
         elif distance_from_center >= 0.02 and distance_from_center <= 0.03:
             return 0.3
@@ -240,11 +251,14 @@ class DeepRacerEnv(gym.Env):
 
     def send_reward_to_cloudwatch(self, reward):
         session = boto3.session.Session()
+        
+        self.simID = rospy.get_param('SIM_ID')
+        
         cloudwatch_client = session.client('cloudwatch', region_name=self.aws_region)
         cloudwatch_client.put_metric_data(
             MetricData=[
                 {
-                    'MetricName': 'DeepRacerRewardPerEpisode',
+                    'MetricName': 'DeepRacerRewardPerEpisode' + self.simID,
                     'Unit': 'None',
                     'Value': reward
                 },

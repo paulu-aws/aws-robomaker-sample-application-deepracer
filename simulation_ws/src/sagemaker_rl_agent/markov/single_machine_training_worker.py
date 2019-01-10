@@ -74,6 +74,10 @@ def main():
                         help="(bool) True if we need to store the frozen graph",
                         type=bool,
                         default=True)
+    parser.add_argument('--simulation-id',
+                        help="(string) simulation id for cloudwatch tracking",
+                        type=str,
+                        default=os.environ.get("SIM_ID"))
 
     args = parser.parse_args()
 

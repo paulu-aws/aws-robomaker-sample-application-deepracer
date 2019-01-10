@@ -4,6 +4,7 @@
     <param name="MODEL_S3_BUCKET" value="$(env MODEL_S3_BUCKET)" />
     <param name="MODEL_S3_PREFIX" value="$(env MODEL_S3_PREFIX)" />
     <param name="ROS_AWS_REGION" value="$(env ROS_AWS_REGION)" />
+    <param name="SIM_ID" value="$(env SIMNAME)" />
     <param name="JOB_TYPE" value="TRAINING" />
 
     <include file="$(find deepracer_simulation)/launch/racetrack_with_racecar.launch">
